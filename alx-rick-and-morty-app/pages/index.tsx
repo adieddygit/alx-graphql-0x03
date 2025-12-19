@@ -3,30 +3,41 @@ import { GET_EPISODES } from "@/graphql/queries";
 import { EpisodeProps } from "@/interfaces";
 import EpisodeCard  from "@/components/common/EpisodeCard";
 import { useEffect, useState } from "react";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import ErrorProneComponent from "@/components/ErrorProneComponent";
 
 const Home: React.FC = () => {
 
   const [page, SetPage] = useState<number>(1)
   const { loading, error, data, refetch } = useQuery(GET_EPISODES, {
     variables: {
-      page: page
+      page: page,
 
-    }
-  })
+    },
+  });
 
   useEffect(() => {
     refetch()
   }, [page, refetch])
 
-  if (loading) return <h1>Loading...</h1>
-  if (error) return <h1>Error</h1>
+  if (loading) return <h1>Loading...</h1>;
+  if (error) return <h1>Error</h1>;
 
-  const results = data?.episodes.results
-  const info = data?.episodes.info
+  const results = data?.episodes.results;
+  const info = data?.episodes.info;
 
   return (
+    
     <div className="min-h-screen flex flex-col bg-linear-to-b from-[#A3D5E0]">
       {/* Header */}
+
+      <div className="text-center text-red-500 mt-2">
+      <ErrorBoundary>
+        <ErrorProneComponent />
+      </ErrorBoundary>
+      </div>
+  
+
       <header className="bg-[#4CA1AF text-white py-6 text-center shadow-md">
           <h1 className="text-4xl font-bold tracking-wider">Rick and Morty Episodes</h1>
           <p className="mt-2 text-lg italic">Explore the multiverse of adventures!</p>
@@ -66,7 +77,7 @@ const Home: React.FC = () => {
       </footer>
     
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
